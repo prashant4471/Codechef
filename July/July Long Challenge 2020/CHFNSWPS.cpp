@@ -1,104 +1,78 @@
-#include <bits/stdc++.h>
-#include<unordered_map>
-#include<vector>
+#include<bits/stdc++.h>
 using namespace std;
-int main(){
-    int t;
+#define ll long long int
+int main()
+{
+    ll t;
     cin>>t;
-    while(t--){
-        long int n,i,p,count=0;
+    while(t--)
+    {
+        ll n;
         cin>>n;
-        unordered_map<long int,long int> a;
-        unordered_map<long int,long int> b;
-        vector<long int> c;
-        vector<long int> d;
-        for(i=0;i<n;i++){
-            cin>>p;
-            a[p]++;
+        ll a[n],b[n];
+        unordered_map<ll,ll>mp,mp1,mp2;
+        ll m1=INT_MAX;
+        for(int i=0;i<n;i++)
+        {
+            cin>>a[i];
+            m1=min(a[i],m1);
+            mp[a[i]]++;
         }
-        for(i=0;i<n;i++){
-            cin>>p;
-            if(a[p]>=1)
-            a[p]--;
-            else
-            b[p]++;
+        for(int i=0;i<n;i++)
+        {
+            cin>>b[i];
+            m1=min(b[i],m1);
+            mp[b[i]]++;
         }
-        for (auto it = a.begin(); it != a.end(); )
-{
-    if (it->second == 0) { d.push_back(it->first);a.erase(it++); }
-    else                      { ++it;          }
-}
-        for (auto it = b.begin(); it != b.end(); )
-{
-    if (it->second == 0) { d.push_back(it->first);b.erase(it++); }
-    else                      { ++it;          }
-}
-        if(a.empty())
-        cout<<"0"<<"\n";
-        else{
-        int flag=0;
-        for(auto it: a){
-            if(it.second%2==1){
+        ll flag=0;
+        for(auto u:mp)
+        {
+            if(u.second%2==1)
+            {
                 flag=1;
                 break;
             }
+            else
+            {
+                mp1[u.first]=u.second/2;
+            }  
         }
-        if(flag==0){
-            for(auto it: b){
-                if(it.second%2==1){
-                    flag==1;
-                    break;
-                }
-            }
-            if(flag==1)
-            cout<<"-1"<<"\n";
+        if(flag)
+        {
+            cout<<"-1\n";
+            continue;
         }
         else
-        cout<<"-1"<<"\n";
-        if(flag==0){
-            for(auto it: a){
-                i=0;
-                while(i<((it.second)/2)){
-                     c.push_back(it.first);
-                     i++;
-                }
-            }
-            for(auto it: b){
-                i=0;
-                while(i<((it.second)/2)){
-                     c.push_back(it.first);
-                     i++;
-                }
-            }
-            sort(c.begin(),c.end());
-            sort(d.begin(),d.end());
-            long int y=d.front();
-            long int d=c.size();
-            long int x=c.front();
-            for(auto it: c){
-                if(it==x)
-                count++;
+        {
+            mp2=mp1;
+            std::vector<ll>v1,v2;
+            for(int i=0;i<n;i++)
+            {
+                if(mp1[a[i]])
+                mp1[a[i]]--;
                 else
-                break;
+                v1.push_back(a[i]);
             }
-            i=0;
-            long int z=0;
-            for(auto it: c){
-                if(i<(d/2)){
-                    z+=it;
-                    i++;
-                }
+            for(int i=0;i<n;i++)
+            {
+                if(mp2[b[i]])
+                mp2[b[i]]--;
                 else
-                break;
+                v2.push_back(b[i]);
             }
-            long int o=y*d;
-            if(o>(x*(d-count)))
-            o=(x*(d-count));
-            if(o>z)
-            o=z;
-            cout<<o<<"\n";
-        }
-      }
+            sort(v1.begin(),v1.end());
+            sort(v2.begin(),v2.end(),greater<ll>());
+            ll y=v1.size();
+            if(y==0)
+            cout<<"0\n";
+            else
+            { ll ans=0;
+                  for(int i=0;i<y;i++)
+                  {
+                      ans+=min(2*m1,min(v1[i],v2[i]));
+                  }
+                  cout<<ans<<"\n";
+            }
+        }   
     }
-    return 0;
 }
